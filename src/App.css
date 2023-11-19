@@ -22,3 +22,6 @@
 body{
   
 }
+.home{
+  min-height: fit-content;
+}

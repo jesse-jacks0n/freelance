@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
 import Navbar from '../components/Navbar';
 import BodyContent from "./BodyContent";
+import {Toaster} from "react-hot-toast";
 
+
+const divStyle = {
+    backgroundImage: 'url(/images/bg.png)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat'
+};
 function AdminHomePage() {
     const [activeButton, setActiveButton] = useState('overview');
 
@@ -11,7 +18,10 @@ function AdminHomePage() {
 
     return (
         <div
-            className="home bg-gray-100 relative min-h-screen ">
+            className="home bg-gray-50  relative min-h-screen "
+            // style={divStyle}
+        >
+            <div><Toaster/></div>
             <Navbar
                 activeButton={activeButton}
                 handleButtonClick={handleButtonClick}

@@ -1,82 +1,96 @@
 import React, { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
 import { get, ref } from 'firebase/database';
-import { auth, database } from '../../firebase';
-import TimeAgo from '../components/TimeAgo';
-
+import {auth, database, storage} from '../../firebase';
+import { onAuthStateChanged } from "firebase/auth";
+import {ref as storageReference,getDownloadURL} from "firebase/storage";
 const MyJobs = () => {
-    const [user, setUser] = useState(null);
-    const [hiredJobs, setHiredJobs] = useState([]);
+    const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
             if (authUser) {
-                console.log('Authenticated user:', authUser);
+                try {
+                    // Fetch jobs from the "hiredApplicants" collection for the authenticated user
+                    const hiredApplicantsRef = ref(database, `hiredApplicants/${authUser.uid}`);
+                    const hiredApplicantsSnapshot = await get(hiredApplicantsRef);
 
-                const userRef = ref(database, `users/${authUser.uid}`);
-                const snapshot = await get(userRef);
-                const userData = snapshot.val();
-                const mergedUser = { ...authUser, ...userData };
-                setUser(mergedUser);
-                console.log('Merged user data:', mergedUser);
+                    console.log('hiredApplicantsSnapshot.val():', hiredApplicantsSnapshot.val());
 
-                // Fetch jobs where the current user is the hired applicant
-                const hiredJobsRef = ref(database, `hiredApplicants/${authUser.uid}`);
-                const hiredJobsSnapshot = await get(hiredJobsRef);
-
-                if (hiredJobsSnapshot.exists()) {
-                    const hiredJobsData = Object.entries(hiredJobsSnapshot.val())
-                        .filter(([key, value]) => value === true) // Filter based on truthy values (user hired)
-                        .map(([key, value]) => key); // Extract the job IDs
-
-                    // Fetch details for each hired job
-                    const jobsDetailsPromises = hiredJobsData.map(async (jobId) => {
-                        const jobRef = ref(database, `jobs/translation/${jobId}`); // Adjust the path based on your data structure
-                        const jobSnapshot = await get(jobRef);
-                        if (jobSnapshot.exists()) {
-                            return {
-                                id: jobId,
-                                ...jobSnapshot.val(),
-                            };
-                        }
-                        return null;
-                    });
-
-                    const jobsDetails = await Promise.all(jobsDetailsPromises);
-                    setHiredJobs(jobsDetails.filter(Boolean)); // Remove null values
-                    console.log('Hired jobs data:', jobsDetails);
-                } else {
-                    setHiredJobs([]);
-                    console.log('No hired jobs found.');
+                    if (hiredApplicantsSnapshot.exists()) {
+                        const jobsData = hiredApplicantsSnapshot.val();
+                        setJobs([jobsData]);
+                    } else {
+                        setJobs([]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
                 }
-            } else {
-                setUser(null);
-                setHiredJobs([]);
-                console.log('User not authenticated.');
             }
         });
 
         return () => unsubscribe();
     }, []);
 
+    console.log('Jobs:', jobs);
+
     return (
-        <div className="flex flex-col min-h-screen mx-4 sm:mx-8 md:mx-16 lg:mx-16 xl:mx-24 2xl:mx-28">
-            <h2 className="text-xl font-bold mt-4">My Hired Jobs</h2>
-            {hiredJobs.map((hiredJob) => (
-                <div key={hiredJob.id} className="mt-4 p-4 border border-gray-200 drop-shadow-sm rounded-md bg-white">
-                    <h3 className="text-lg font-medium mb-2 text-green-800">{hiredJob.jobTitle}</h3>
-                    <p className="text-gray-600 px-2 py-1 w-fit rounded-full bg-gray-100 text-sm mr-2">
-                        Category: {hiredJob.categoryId}
-                    </p>
-                    {hiredJob.deadline && (
-                        <p className="text-gray-700 px-2 py-1 my-2 w-fit rounded-lg bg-gray-50 text-sm">
-                            Deadline: {new Date(hiredJob.deadline).toLocaleString()}
-                        </p>
-                    )}
+        <div className="mx-10 ">
+            <h1>My Jobs</h1>
+            <div className=" mt-4 p-4 border border-gray-200 drop-shadow-sm rounded-lg bg-white">
+                <div>
+                    {jobs.map((job, index) => (
+                        <div key={index}>
+                            <div className="flex items-center justify-between">
+                                <div  className="flex items-center">
+                                    <p className="   text-green-900 text-md ">{job.jobTitle}</p>
+                                </div>
+                                <div className="flex items-center justify-center text-sm gap-2">
+                                   <p>Attachment</p>
+                                    {job.jobId && (
+                                        <DownloadLink jobId={job.jobId} />
+                                    )}
+                                </div>
+
+                            </div>
+                            <div className="flex flex-col bg-gray-100 p-2 mt-2 rounded-md">
+                                <p className="text-sm font-light text-gray-900">Description: {job.jobDescription}</p>
+
+                                <p className="text-md  font-medium text-black">Deadline: {new Date(job.deadline).toLocaleString()}</p>
+                            </div>
+
+
+                        </div>
+                    ))}
                 </div>
-            ))}
+            </div>
         </div>
+
     );
 };
+const DownloadLink = ({ jobId }) => {
+    const [fileDownloadURL, setFileDownloadURL] = useState(null);
 
+    useEffect(() => {
+        const fetchFileDownloadURL = async () => {
+            try {
+                const storageRef = storageReference(storage, `documents/${jobId}`);
+                const downloadURL = await getDownloadURL(storageRef);
+                setFileDownloadURL(downloadURL);
+            } catch (error) {
+                console.error('Error fetching file download URL:', error);
+            }
+        };
+
+        fetchFileDownloadURL();
+    }, [jobId]);
+
+    return (
+        <div className="bg-gray-200 p-2 rounded-full">
+            <a href={fileDownloadURL} download>
+                <img className="w-6 " src="/icons/paperclip.png" alt="icon"/>
+            </a>
+        </div>
+
+    );
+};
 export default MyJobs;

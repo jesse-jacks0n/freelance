@@ -34,7 +34,7 @@ const TimeAgo = ({ timestamp }) => {
         calculateTimeAgo();
     }, [timestamp]);
 
-    return <p className="text-gray-600 px-2 py-1 w-fit rounded-full bg-gray-50 text-xs mr-2 mb-2 border border-gray-100">Posted {timeAgo}</p>;
+    return <p className="text-gray-600 px-2 py-1 w-fit rounded-full bg-gray-50 text-xs mr-2  border border-gray-100">Posted {timeAgo}</p>;
 };
 
 export default TimeAgo;

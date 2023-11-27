@@ -1,9 +1,17 @@
-import React from "react";
-import {MessageRounded, NotificationsActiveRounded} from "@mui/icons-material";
+import React, {useState} from "react";
+import {MessageRounded, MoreVert, NotificationsActiveRounded} from "@mui/icons-material";
 import SignOutButton from "./SignoutButton";
+import {Avatar, Menu, MenuItem} from "@mui/material";
 
 
 export default function Navbar({ activeButton, handleButtonClick }) {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     return (
         <div className="navbar bg-gray-50 sticky top-0 px-1  flex justify-between items-center z-10 w-full">
             <div className="logo text-white text-lg">
@@ -46,7 +54,27 @@ export default function Navbar({ activeButton, handleButtonClick }) {
                 <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-200 mx-4">
                     <MessageRounded/>
                 </div>
-                <SignOutButton/>
+                <Avatar
+                />
+                <div>
+                    <MoreVert
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                        className=" text-gray-600 rounded-full  items-center"
+                    >
+                    </MoreVert>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={handleClose}>
+                            <SignOutButton/>
+                        </MenuItem>
+                    </Menu>
+                </div>
             </div>
 
         </div>

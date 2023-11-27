@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { get, ref } from 'firebase/database';
-import { database } from '../../firebase';
+import {database, storage} from '../../firebase';
+import {AiOutlineUser} from "react-icons/ai";
+import {ref as storageReference,getDownloadURL} from "firebase/storage";
 
 const InProgress = () => {
     const [hiredApplicants, setHiredApplicants] = useState([]);
@@ -33,12 +35,17 @@ const InProgress = () => {
                     Object.entries(hiredApplicantsSnapshot.val()).map(async ([userId, data]) => {
                         const userDetails = await fetchUserDetails(userId);
 
+                        // Fetch the download URL of the file from Firebase Storage
+                        const storageRef = storageReference(storage, `documents/${data.jobId}`);
+                        const fileDownloadURL = await getDownloadURL(storageRef);
+
                         return {
                             userId,
                             username: userDetails.username,
                             email: userDetails.email,
                             jobTitle: data.jobTitle, // Use the job title directly from the data
                             deadline: data.deadline,
+                            fileDownloadURL: fileDownloadURL,
                         };
                     })
                 );
@@ -64,19 +71,38 @@ const InProgress = () => {
                 {hiredApplicants.length > 0 ? (
                     <ul>
                         {hiredApplicants.map((applicant) => (
-                            <li key={applicant.userId} className="bg-white p-6 mb-4 rounded-md shadow-md">
-                                <p className="text-lg font-semibold mb-2">
-                                    <strong>User:</strong> {applicant.username}
-                                </p>
-                                <p className="text-gray-600 mb-2">
-                                    <strong>Email:</strong> {applicant.email}
-                                </p>
-                                <p className="text-lg font-semibold mb-2">
-                                    <strong>Job Title:</strong> {applicant.jobTitle}
-                                </p>
-                                <p className="text-gray-600">
-                                    <strong>Deadline:</strong> {applicant.deadline}
-                                </p>
+                            <li key={applicant.userId}
+                                className="bg-white p-6 mb-4 rounded-md shadow-md border border-gray-100">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-lg font-medium mb-2 text-green-800">
+                                        Job: {applicant.jobTitle}
+                                    </p>
+                                    <a href={applicant.fileDownloadURL} download> <img className="w-8 mb-2" src="/icons/pdf.png" alt="icon"/>
+                                    </a>
+                                </div>
+
+                                <div className="flex items-center mb-2 bg-gray-50 rounded-md p-2">
+                                <div className="bg-gray-200 rounded-full p-2 mr-2 ">
+                                        <AiOutlineUser size={24} color="gray"/>
+                                    </div>
+
+                                    <div>
+                                        <p>{applicant.username}</p>
+                                        <p className="text-gray-600 font-light text-xs">
+                                            {applicant.email}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                                    <p className="text-gray-600">
+                                        Deadline: {new Date(applicant.deadline).toLocaleString()}
+                                    </p>
+                                    <button className="bg-orange-600 text-white text-sm rounded-md py-1 px-2">
+                                        Extend Deadline
+                                    </button>
+                                </div>
+
                             </li>
                         ))}
                     </ul>

@@ -4,7 +4,7 @@ import SignOutButton from "../../components/SignoutButton";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, database} from "../../firebase";
 import {get, ref} from "firebase/database";
-import {Button, Menu, MenuItem} from "@mui/material";
+import {Avatar, Button, Menu, MenuItem} from "@mui/material";
 
 
 export default function FreelancerNav({activeButton, handleBtnClick}) {
@@ -70,7 +70,7 @@ export default function FreelancerNav({activeButton, handleBtnClick}) {
                 </div>
 
                 <div className="profile-container flex justify-center gap-2 items-center ">
-                    <h1 className="text-lg font-medium">Hi, {userName}</h1>
+
                     <div
                         className="w-10 h-10 rounded-full flex border items-center justify-center bg-white drop-shadow-sm">
                         <NotificationsActiveRounded
@@ -81,6 +81,9 @@ export default function FreelancerNav({activeButton, handleBtnClick}) {
                         <MessageRounded
                             className="text-gray-600"/>
                     </div>
+                    <h1 className="text-lg font-medium">Hi, {userName}</h1>
+                    <Avatar
+                    />
                     <div>
                         <MoreVert
                             aria-controls="simple-menu"

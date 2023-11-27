@@ -49,6 +49,12 @@ const Overview = () => {
         setModalOpen(false);
         setSelectedService(null);
     };
+    const divStyle = {
+        backgroundImage: 'url("/images/overview.jpg")',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center center',
+    };
     return (
         <div
 
@@ -62,7 +68,7 @@ const Overview = () => {
                     <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2 mb-4">
                         <Link
                             to="/translation"
-                            className="p-4 bg-white rounded-md shadow-lg border border-gray-100 flex cursor-pointer hover:bg-gray-50"
+                            className="p-4 bg-white rounded-md shadow-md flex cursor-pointer hover:bg-gray-50"
                             onClick={() => openModal('Translation')}
                             style={{textDecoration: 'none'}}
                         >
@@ -81,7 +87,7 @@ const Overview = () => {
                     <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2 mb-4">
                         <Link
                             to="/logodesign"
-                            className="p-4 bg-white rounded-lg shadow-lg border border-gray-100 flex cursor-pointer hover:bg-gray-50"
+                            className="p-4 bg-white rounded-lg shadow-md flex cursor-pointer hover:bg-gray-50"
                             onClick={() => openModal('LogoDesign')}
                             style={{textDecoration: 'none'}}
                         >
@@ -100,7 +106,7 @@ const Overview = () => {
                     <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2 mb-4">
                         <Link
                             to="/retyping"
-                            className="p-4 bg-white rounded-lg shadow-lg border border-gray-100 flex cursor-pointer hover:bg-gray-50"
+                            className="p-4 bg-white rounded-lg shadow-md flex cursor-pointer hover:bg-gray-50"
                             onClick={() => openModal('Retyping')}
                             style={{textDecoration: 'none'}}
                         >
@@ -119,7 +125,7 @@ const Overview = () => {
                     <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2 mb-4">
                         <Link
                             to="/documentconversion"
-                            className="p-4 bg-white rounded-lg border border-gray-100 shadow-lg flex cursor-pointer hover:bg-gray-50"
+                            className="p-4 bg-white rounded-lg shadow-md flex cursor-pointer hover:bg-gray-50"
                             onClick={() => openModal('DocumentConversion')}
                             style={{textDecoration: 'none'}}
                         >
@@ -145,7 +151,6 @@ const Overview = () => {
                         {/* Add other service pages here */}
                     </ServiceModal>
                 )}
-
 
             </section>
 

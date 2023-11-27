@@ -13,7 +13,7 @@ const DocumentConversionTable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const jobsRef = ref(database, 'jobs/translation');
+                const jobsRef = ref(database, 'jobs/documentConversion');
                 const snapshot = await get(jobsRef);
 
                 if (snapshot.exists()) {
@@ -111,7 +111,7 @@ const DocumentConversionTable = () => {
             // Move selected jobs to the 'deleted' collection
             await Promise.all(
                 selectedJobs.map(async (jobId) => {
-                    const jobRef = ref(database, `jobs/translation/${jobId}`);
+                    const jobRef = ref(database, `jobs/documentConversion/${jobId}`);
                     const jobSnapshot = await get(jobRef);
 
                     if (jobSnapshot.exists()) {

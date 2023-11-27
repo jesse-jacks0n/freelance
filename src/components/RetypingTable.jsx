@@ -111,7 +111,7 @@ const RetypingTable = () => {
             // Move selected jobs to the 'deleted' collection
             await Promise.all(
                 selectedJobs.map(async (jobId) => {
-                    const jobRef = ref(database, `jobs/translation/${jobId}`);
+                    const jobRef = ref(database, `jobs/retyping/${jobId}`);
                     const jobSnapshot = await get(jobRef);
 
                     if (jobSnapshot.exists()) {

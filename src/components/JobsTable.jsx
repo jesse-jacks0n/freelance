@@ -10,6 +10,7 @@ const JobsTable = ({ data, selectedJobs, handleCheckboxChange }) => {
                     <TableCell align="left">Title</TableCell>
                     <TableCell align="left">Description</TableCell>
                     <TableCell align="left">Date Created</TableCell>
+                    <TableCell align="left">Hired Applicant</TableCell>
                     <TableCell align="left">Status</TableCell>
                     {/* Add more columns as needed */}
                 </TableRow>
@@ -26,6 +27,7 @@ const JobsTable = ({ data, selectedJobs, handleCheckboxChange }) => {
                         <TableCell align="left">{job.jobTitle}</TableCell>
                         <TableCell align="left">{job.jobDescription}</TableCell>
                         <TableCell align="left">{job.timestamp}</TableCell>
+                        <TableCell align="left">{"job.hired applicant"}</TableCell>
                         <TableCell align="left">{job.jobStatus}</TableCell>
                         {/* Add more cells as needed */}
                     </TableRow>

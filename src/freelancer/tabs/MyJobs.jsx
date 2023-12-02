@@ -34,20 +34,20 @@ const MyJobs = () => {
     console.log('Jobs:', jobs);
 
     return (
-        <div className="mx-10 ">
-            <h1>My Jobs</h1>
-            <div className=" mt-4 p-4 border border-gray-200 drop-shadow-sm rounded-lg bg-white">
+        <div className="mx-auto max-w-screen-2xl">
+            <h1 className="mx-4">My Jobs</h1>
+            <div className="mx-4 mt-4 p-4 border border-gray-200 drop-shadow-sm rounded-lg bg-white">
                 <div>
                     {jobs.map((job, index) => (
                         <div key={index}>
                             <div className="flex items-center justify-between">
-                                <div  className="flex items-center">
+                                <div className="flex items-center">
                                     <p className="   text-green-900 text-md ">{job.jobTitle}</p>
                                 </div>
                                 <div className="flex items-center justify-center text-sm gap-2">
-                                   <p>Attachment</p>
+                                    <p>Attachment</p>
                                     {job.jobId && (
-                                        <DownloadLink jobId={job.jobId} />
+                                        <DownloadLink jobId={job.jobId}/>
                                     )}
                                 </div>
 
@@ -55,9 +55,18 @@ const MyJobs = () => {
                             <div className="flex flex-col bg-gray-100 p-2 mt-2 rounded-md">
                                 <p className="text-sm font-light text-gray-900">Description: {job.jobDescription}</p>
 
-                                <p className="text-md  font-medium text-black">Deadline: {new Date(job.deadline).toLocaleString()}</p>
-                            </div>
 
+                            </div>
+                            <div className="flex justify-between mt-2 items-center">
+                                <p className="text-md   font-medium text-green-900">Deadline
+                                    <span
+                                        className="bg-gray-100 text-sm px-2 py-1 ml-1 rounded-full">{new Date(job.deadline).toLocaleString()}</span>
+                                </p>
+                                <button className="bg-purple-600 text-white text-sm rounded-full py-1 px-2">
+                                  <span className="">+</span> add submission
+                                </button>
+
+                            </div>
 
                         </div>
                     ))}
@@ -67,7 +76,7 @@ const MyJobs = () => {
 
     );
 };
-const DownloadLink = ({ jobId }) => {
+const DownloadLink = ({jobId}) => {
     const [fileDownloadURL, setFileDownloadURL] = useState(null);
 
     useEffect(() => {

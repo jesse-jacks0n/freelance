@@ -16,8 +16,8 @@ const Tabs = ({ children }) => {
             <div className="flex">
                 {React.Children.map(children, (child, index) => (
                     <div
-                        className={`cursor-pointer rounded-md hover:bg-gray-200 mr-2 px-4 py-2 ${
-                            activeTab === index ? 'bg-teal-500 text-white rounded-md hover:bg-teal-400' : ''
+                        className={`cursor-pointer text-sm rounded-full hover:bg-gray-200 mr-2 px-3 py-1 ${
+                            activeTab === index ? 'bg-teal-500 text-white rounded-full hover:bg-teal-400' : ''
                         }`}
                         onClick={() => handleTabClick(index)}
                     >
@@ -36,18 +36,18 @@ const TabPanel = ({ children }) => <div>{children}</div>;
 
 const YourJobsTabs = () => (
     <div>
-        <h2 className="text-xl mb-2 font-md mt-4">Your Jobs</h2>
+        <h2 className="text-xl mb-2 font-md mt-4">Jobs</h2>
         <Tabs>
-            <TabPanel label="Translation Jobs">
+            <TabPanel label="Translation">
                 <TranslationTable />
             </TabPanel>
-            <TabPanel label="Logo Design Jobs">
+            <TabPanel label="Logo Design">
                 <LogoDesignTable />
             </TabPanel>
-            <TabPanel label="Retyping Jobs">
+            <TabPanel label="Retyping">
                 <RetypingTable />
             </TabPanel>
-            <TabPanel label="Document Conversion Jobs">
+            <TabPanel label="Document Conversion">
                 <DocumentConversionTable />
             </TabPanel>
         </Tabs>

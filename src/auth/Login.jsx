@@ -1,15 +1,75 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom'
 
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {auth, database} from "../firebase";
-import {get, ref} from "firebase/database";
+import {signInWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
+import {auth, database, provider,} from "../firebase";
+import {get, ref, set, update} from "firebase/database";
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false); // State to manage loading
+
+    const signInWithGoogle = () => {
+        signInWithPopup(auth, provider)
+            .then(async (result) => {
+                console.log(result);
+                const user = result.user;
+                const username = user.displayName;
+                const email = user.email;
+                const profilePic = user.photoURL;
+
+                const userRef = ref(database, `users/${user.uid}`);
+
+                // Add user data to Realtime Database
+                try {
+                    await update(userRef, {
+                        username,
+                        email,
+                        profilePic,
+                        // You can add other user data as needed
+                    });
+                } catch (error) {
+                    console.error('Error adding user data to database:', error);
+                }
+
+                // Fetch additional user data from Realtime Database
+                const getUserData = async () => {
+                    try {
+                        const snapshot = await get(userRef);
+
+                        if (snapshot.exists()) {
+                            const userData = snapshot.val();
+                            const isAdmin = userData.adminStatus || false;
+
+                            if (isAdmin) {
+                                // Redirect to admin home page if adminStatus is true
+                                navigate("/adminHomePage");
+                            } else {
+                                // Redirect to freelancer dashboard if adminStatus is not true
+                                navigate("/freelancerHomePage");
+                            }
+                        } else {
+                            // Handle case where user data doesn't exist
+                            console.error('User data not found');
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user data:', error);
+                    } finally {
+                        setLoading(false); // Reset loading state regardless of login success or failure
+                    }
+                };
+
+                getUserData();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+// The onLogin function is not needed anymore, as its functionality is now included in signInWithGoogle.
+
     const onLogin = (e) => {
         e.preventDefault();
         setLoading(true); // Set loading state to true on login
@@ -93,7 +153,16 @@ const LoginPage = () => {
                         > {loading ? 'Loading...' : 'Login'}
                         </button>
                     </div>
+
                 </form>
+                <div className={"flex justify-center"}>
+                    <button className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            onClick={signInWithGoogle}
+                    >
+                        Continue with google
+                    </button>
+
+                </div>
                 <div className="mt-6 text-center ">
                     <p className="text-sm sm:text-base text-gray-600 ">Don't have an account?
                         <button onClick={goToSignup}

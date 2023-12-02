@@ -9,7 +9,7 @@ export default function Profile() {
     const [authUser, setAuthUser] = useState(null);  // Add this state variable
     const [phoneNumber, setPhoneNumber] = useState("");
     const [Rapport, setRapport] = useState("");
-
+    const profilePic = user && user.profilePic ? user.profilePic : 'default-profile-pic.jpg';
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -59,9 +59,9 @@ export default function Profile() {
             {user && (
             <div className="flex flex-col items-center justify-center">
                 {/* Display User Avatar */}
-                <div className="w-72 h-72 rounded-full bg-gray-200 flex items-center justify-center">
 
-                </div>
+                    <img className="w-32 h-32 rounded-full "
+                        src={profilePic} alt="Profile Picture"/>
 
                 {/* User Details Form */}
                 <form onSubmit={handleSubmit} className="flex flex-col w-400">

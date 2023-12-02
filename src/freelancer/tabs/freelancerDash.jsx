@@ -8,7 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function FreelancerDash() {
     const [user, setUser] = useState(null);
     const [jobs, setJobs] = useState([]);
-
+    const [applicantsCount, setApplicantsCount] = useState({});
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
             if (authUser) {
@@ -50,7 +50,27 @@ export default function FreelancerDash() {
 
         return () => unsubscribe();
     }, []);
+    useEffect(() => {
+        // Fetch applicants count for each job
+        const fetchApplicantsCount = async () => {
+            const counts = {};
 
+            for (const job of jobs) {
+                const count = await getApplicantsCount(job.category, job.id);
+                counts[job.id] = count;
+            }
+
+            setApplicantsCount(counts);
+        };
+
+        fetchApplicantsCount();
+    }, [jobs]);
+
+    const getApplicantsCount = async (category, jobId) => {
+        const applicantsRef = ref(database, `jobs/${category}/${jobId}/applicants`);
+        const snapshot = await get(applicantsRef);
+        return snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+    };
     const applyForJob = async (jobId) => {
         try {
             // Update the job in the database with the new applicant
@@ -65,11 +85,11 @@ export default function FreelancerDash() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen mx-4 sm:mx-8 md:mx-16 lg:mx-16 xl:mx-24 2xl:mx-28">
+        <div className="flex flex-col pb-8 mx-auto min-h-screen max-w-screen-2xl">
             <div><Toaster/></div>
-            <h2 className="text-xl font-bold mt-4">Recent Jobs</h2>
+            <h2 className="text-xl mx-4 font-bold mt-4">Recent Jobs</h2>
             {jobs.map((job) => (
-                <div key={job.id} className="mt-4 p-4 border border-gray-200 drop-shadow-sm rounded-md bg-white">
+                <div key={job.id} className="mt-4 mx-4 p-4 border border-gray-200 drop-shadow-sm rounded-md bg-white">
                     <h3 className="text-lg font-medium mb-2 text-green-800">{job.jobTitle}</h3>
                     <p className="flex">
                         <p className="text-gray-600 px-2 py-1 w-fit rounded-full bg-gray-100 text-sm mr-2">{job.category} </p>
@@ -82,12 +102,14 @@ export default function FreelancerDash() {
                        style={{minHeight: '50px'}}>Description : {job.jobDescription}</p>
                     <div className="flex items-center ">
                         <TimeAgo timestamp={job.timestamp}/>
-                        <p className="text-sm font-light bg-gray-100 py-1 px-2 rounded-full">No of Applicants : 25</p>
+                        <p className="text-xs text-gray-600 font-medium bg-gray-100 py-1 px-2 rounded-full">
+                            No of Applicants : {applicantsCount[job.id] || 0}
+                        </p>
                     </div>
 
                     {user && (
                         <button
-                            className="border border-green-800 rounded-full hover:bg-green-800 hover:text-white py-1 px-3 text-green-800 text-sm drop-shadow-md cursor-pointer"
+                            className="border border-green-800 rounded-full hover:bg-green-800 hover:text-white py-1 mt-2 px-3 text-green-800 text-sm drop-shadow-md cursor-pointer"
                             onClick={() => applyForJob(job.id)}
                             disabled={job.applicants && job.applicants[user.uid]}
                         >

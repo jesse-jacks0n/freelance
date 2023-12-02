@@ -49,6 +49,7 @@ const Overview = () => {
         setModalOpen(false);
         setSelectedService(null);
     };
+    const completed ="completed :";
     return (
         <div
 
@@ -69,9 +70,9 @@ const Overview = () => {
                             <div className="image w-28 mr-4">
                                 <img src="/icons/translate.png" alt="Translation Icon"/>
                             </div>
-                            <div className="card-content text-black no-underline">
+                            <div className="card-content text-sm text-black no-underline">
                                 <h3 className="text-lg font-bold mb-2 text-black no-underline">Translation</h3>
-                                <p>projects completed: {/* Display the actual number */}</p>
+                                <p>{completed} {/* Display the actual number */}</p>
                                 <p>Latest updates: {/* Display the latest updates */}</p>
                             </div>
                         </Link>
@@ -88,9 +89,9 @@ const Overview = () => {
                             <div className="image w-28 mr-4">
                                 <img src="/icons/creative.png" alt="Logo Designing Icon"/>
                             </div>
-                            <div className="card-content text-black no-underline">
+                            <div className="card-content text-sm text-black no-underline">
                                 <h3 className="text-lg font-bold mb-2">Logo Designing</h3>
-                                <p>projects completed: {/* Display the actual number */}</p>
+                                <p>{completed}{/* Display the actual number */}</p>
                                 <p>Latest updates: {/* Display the latest updates */}</p>
                             </div>
                         </Link>
@@ -107,9 +108,9 @@ const Overview = () => {
                             <div className="image w-28 mr-4">
                                 <img src="/icons/typing.png" alt="Retyping Icon"/>
                             </div>
-                            <div className="card-content text-black no-underline">
+                            <div className="card-content text-sm text-black no-underline">
                                 <h3 className="text-lg font-bold mb-2">Retyping</h3>
-                                <p>projects completed: {/* Display the actual number */}</p>
+                                <p>{completed} {/* Display the actual number */}</p>
                                 <p>Latest updates: {/* Display the latest updates */}</p>
                             </div>
                         </Link>
@@ -126,9 +127,9 @@ const Overview = () => {
                             <div className="image w-28 mr-4">
                                 <img src="/icons/conversion.png" alt="Document Conversion Icon"/>
                             </div>
-                            <div className="card-content text-black no-underline">
+                            <div className="card-content text-sm text-black no-underline">
                                 <h3 className="text-lg font-bold mb-2">Document Conversion</h3>
-                                <p>projects completed: {/* Display the actual number */}</p>
+                                <p>{completed} {/* Display the actual number */}</p>
                                 <p>Latest updates: {/* Display the latest updates */}</p>
                             </div>
                         </Link>

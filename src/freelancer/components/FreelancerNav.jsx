@@ -9,7 +9,12 @@ import {Avatar, Button, Menu, MenuItem} from "@mui/material";
 
 export default function FreelancerNav({activeButton, handleBtnClick}) {
     const [user, setUser] = useState(null);
-    const userName = user && user.username ? user.username.toUpperCase() : '';
+    const userName =
+        user && user.username
+            ? user.username.split(' ')[0].charAt(0).toUpperCase() +
+            user.username.split(' ')[0].slice(1).toLowerCase()
+            : '';
+    const profilePic = user && user.profilePic ? user.profilePic : 'default-profile-pic.jpg';
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -34,8 +39,8 @@ export default function FreelancerNav({activeButton, handleBtnClick}) {
         return () => unsubscribe();
     }, []);
     return (
-        <div className="navbar bg-gray-50 sticky top-0 z-10 w-full">
-            <div className="wrapper flex justify-between items-center mx-4 sm:mx-8 md:mx-4 lg:mx-10 xl:mx-16 2xl:mx-24">
+        <div className=" navbar bg-gray-50 sticky top-0 z-10 ">
+            <div className="wrapper flex justify-between items-center max-w-screen-2xl mx-auto ">
                 <div className="logo text-white text-lg">
                     <p className={"text-black mx-4"}>LOGO</p>
 
@@ -69,29 +74,29 @@ export default function FreelancerNav({activeButton, handleBtnClick}) {
 
                 </div>
 
-                <div className="profile-container flex justify-center gap-2 items-center ">
+                <div className="profile-container flex mx-4 justify-center gap-2 items-center ">
 
                     <div
                         className="w-10 h-10 rounded-full flex border items-center justify-center bg-white drop-shadow-sm">
                         <NotificationsActiveRounded
                             className="text-gray-600"/>
                     </div>
-                    <div
-                        className="w-10 h-10 rounded-full border flex items-center justify-center bg-white drop-shadow-sm">
-                        <MessageRounded
-                            className="text-gray-600"/>
-                    </div>
-                    <h1 className="text-lg font-medium">Hi, {userName}</h1>
-                    <Avatar
-                    />
-                    <div>
-                        <MoreVert
-                            aria-controls="simple-menu"
-                            aria-haspopup="true"
-                            onClick={handleClick}
-                            className=" text-gray-600 rounded-full  items-center"
-                        >
-                        </MoreVert>
+                    {/*<div*/}
+                    {/*    className="w-10 h-10 rounded-full border flex items-center justify-center bg-white drop-shadow-sm">*/}
+                    {/*    <MessageRounded*/}
+                    {/*        className="text-gray-600"/>*/}
+                    {/*</div>*/}
+                    {/*<h1 className="text-lg font-medium">Hi, {userName}</h1>*/}
+
+                    <div><img className="w-8 rounded-full cursor-pointer" onClick={handleClick}
+                              src={profilePic} alt="Profile Picture"/>
+                        {/*<MoreVert*/}
+                        {/*    aria-controls="simple-menu"*/}
+                        {/*    aria-haspopup="true"*/}
+
+                        {/*    className=" text-gray-600 rounded-full  items-center"*/}
+                        {/*>*/}
+                        {/*</MoreVert>*/}
                         <Menu
                             id="simple-menu"
                             anchorEl={anchorEl}

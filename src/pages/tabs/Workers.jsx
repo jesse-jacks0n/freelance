@@ -44,7 +44,6 @@ const Workers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [userDetails, setUserDetails] = useState(null);
-
     const [file, setFile] = useState('');
 
     const viewDetails = async () => {
@@ -76,7 +75,7 @@ const Workers = () => {
 
             if (userSnapshot.exists()) {
                 const userData = userSnapshot.val();
-                return { username: userData.username, email: userData.email };
+                return { username: userData.username, email: userData.email, profile:userData.profilePic };
             } else {
                 return { username: 'Unknown User', email: 'Unknown Email' };
             }
@@ -314,7 +313,7 @@ const Workers = () => {
         }
     };
 
-    return (
+      return (
         <div className="lg:mx-52 md:mx-20 mx-8 flex-col  md:grid">
 
             {/* Left side - All Applicants */}
@@ -348,8 +347,9 @@ const Workers = () => {
                                                                 className="bg-gray-50 px-2 py-2 rounded-lg flex items-center justify-between">
                                                                 {/* Avatar */}
                                                                 <div className="flex items-center">
-                                                                    <div className="bg-gray-200 rounded-full p-2 mr-2">
-                                                                        <AiOutlineUser size={24} color="gray"/>
+                                                                    <div className="bg-gray-100 rounded-full p-1 mr-2">
+                                                                        <img className="w-10 h-10 rounded-full "
+                                                                             src={applicant.profile} alt="Profile Picture"/>
                                                                     </div>
 
                                                                     <div>
